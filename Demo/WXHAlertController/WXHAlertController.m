@@ -155,6 +155,9 @@
     if (self.didDisappearBlock) {
         self.didDisappearBlock();
     }
+    self.didAppearBlock = nil;
+    self.didDisappearBlock = nil;
+    self.maskViewDidTapBlock = nil;
     self.maskView.alertController = nil;
 }
 
