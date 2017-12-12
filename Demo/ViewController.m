@@ -8,9 +8,13 @@
 
 #import "ViewController.h"
 #import "WXHAlertController.h"
+#import "WXHAlertView.h"
+#import "WXHActionSheetView.h"
+#import "WXHPopoverView.h"
 
 @interface ViewController ()
-@property (nonatomic, strong) WXHAlertController *alertController;
+@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UINavigationController *nav;
 @end
 
 @implementation ViewController
@@ -18,110 +22,74 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[[UIViewController alloc] init]];
-    [self addChildViewController:nav];
-    [self.view addSubview:nav.view];
-    [self.view sendSubviewToBack:nav.view];
+    self.nav = [[UINavigationController alloc] initWithRootViewController:[[UIViewController alloc] init]];
+    [self addChildViewController:self.nav];
+    [self.view addSubview:self.nav.view];
+    [self.view sendSubviewToBack:self.nav.view];
 }
 
 - (IBAction)typeButtonAction:(id)sender {
     UIButton *button = sender;
-    WXHAlertController *alertController = [[WXHAlertController alloc] init];
-    alertController.contentSize = CGSizeMake(200, 200);
-
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor brownColor];
-
-    alertController.contentView = view;
-    alertController.arrowColor = view.backgroundColor;
-    alertController.style = button.tag;
-    alertController.popverSourceView = sender;
-    alertController.maskViewType = WXHAlertMaskViewTypeBlur;
-    
-    alertController.alertView.containerView.layer.cornerRadius = 10.0f;
-    alertController.alertView.containerView.clipsToBounds = YES;
-    [alertController show:nil];
-    
-//    self.alertController.style = button.tag;
-//    self.alertController.popverSourceView = sender;
-//    [self.alertController show:nil];
+    UIView<WXHAlertContainerDelegate> *containerView;
+    if (button.tag == 0) {
+        containerView = [[WXHActionSheetView alloc] init];
+    } else if (button.tag == 1){
+        containerView = [[WXHAlertView alloc] init];
+    } else if (button.tag == 2) {
+        WXHPopoverView *popoverView = [[WXHPopoverView alloc] init];
+        popoverView.arrowSize = CGSizeMake(30, 15);
+        popoverView.arrowColor = [UIColor brownColor];
+        popoverView.popverSourceView = button;
+        popoverView.popoverSourceFrame = button.frame;
+        containerView = popoverView;
+    }
+    [self showView:self.contentView
+         container:containerView
+          maskType:WXHAlertMaskViewTypeBlur];
 }
 - (IBAction)backgroundButtonAction:(id)sender {
     UIButton *button = sender;
     
-    WXHAlertController *alertController = [[WXHAlertController alloc] init];
-    alertController.contentSize = CGSizeMake(200, 150);
-
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor brownColor];
-
-    alertController.contentView = view;
-    alertController.arrowColor = view.backgroundColor;
-
-    alertController.style = WXHAlertControllerStyleAlert;
-    alertController.maskViewType = button.tag;
-    alertController.popverSourceView = button;
+    UIView<WXHAlertContainerDelegate> *containerView = [[WXHAlertView alloc] init];
     
-    alertController.alertView.containerView.layer.cornerRadius = 10.0f;
-    alertController.alertView.containerView.clipsToBounds = YES;
-    [alertController show:nil];
-    
-//    self.alertController.style = WXHAlertControllerStyleAlert;
-//    self.alertController.maskViewType = button.tag;
-//    self.alertController.popverSourceView = sender;
-//    [self.alertController show:nil];
+    [self showView:self.contentView
+         container:containerView
+          maskType:button.tag];
 }
 
 - (IBAction)popoverAction:(id)sender
 {
-    WXHAlertController *alertController = [[WXHAlertController alloc] init];
-    alertController.contentSize = CGSizeMake(200, 150);
-
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor brownColor];
-
-    alertController.contentView = view;
-    alertController.arrowColor = view.backgroundColor;
-
-    alertController.style = WXHAlertControllerStylePopover;
-    alertController.maskViewType = WXHAlertMaskViewTypeNone;
-    alertController.alertView.containerView.layer.cornerRadius = 10.0f;
-    alertController.alertView.containerView.clipsToBounds = YES;
+    UIButton *button = sender;
+    UIView<WXHAlertContainerDelegate> *containerView;
+    WXHPopoverView *popoverView = [[WXHPopoverView alloc] init];
+    popoverView.arrowSize = CGSizeMake(30, 15);
+    popoverView.arrowColor = [UIColor brownColor];
+    popoverView.popverSourceView = button;
+    popoverView.popoverSourceFrame = button.frame;
+    containerView = popoverView;
     
-    alertController.popverSourceView = sender;
-    [alertController showOnView:self.view complete:nil];
-    
-//    if (self.alertController.isShow) {
-//        [self.alertController dismiss:^{
-//            self.alertController.style = WXHAlertControllerStylePopover;
-//            self.alertController.maskViewType = WXHAlertMaskViewTypeNone;
-//            self.alertController.popverSourceView = sender;
-//            [self.alertController show:nil];
-//        }];
-//    } else {
-//        self.alertController.style = WXHAlertControllerStylePopover;
-//        self.alertController.maskViewType = WXHAlertMaskViewTypeNone;
-//        self.alertController.popverSourceView = sender;
-//        [self.alertController show:nil];
-//    }
+    [self showView:self.contentView
+         container:containerView
+          maskType:WXHAlertMaskViewTypeNone];
 }
-
-
-- (WXHAlertController *)alertController
+- (void)showView:(UIView *)view
+       container:(UIView<WXHAlertContainerDelegate> *)containerView
+        maskType:(WXHAlertMaskViewType)type
 {
-    if (!_alertController) {
-        _alertController = [[WXHAlertController alloc] init];
-        _alertController.contentSize = CGSizeMake(200, 200);
-        
-        UIView *view = [[UIView alloc] init];
-        view.backgroundColor = [UIColor blueColor];
-        
-        _alertController.contentView = view;
-        _alertController.arrowColor = [UIColor redColor];
-    }
-    return _alertController;
+    WXHAlertController *alertController = [[WXHAlertController alloc] initWithContainer:containerView];
+    alertController.contentSize = CGSizeMake(200, 200);
+    alertController.contentView = view;
+    alertController.maskViewType = type;
+    [alertController show:nil];
 }
 
-
+- (UIView *)contentView
+{
+    if (!_contentView) {
+        _contentView = [[UIView alloc] init];
+        _contentView.backgroundColor = [UIColor blueColor];
+    }
+    return _contentView;
+}
 
 @end

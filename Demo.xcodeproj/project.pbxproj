@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E84987A51FDF751400D11A66 /* WXHActionSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = E84987A41FDF751400D11A66 /* WXHActionSheetView.m */; };
+		E84987A81FDF752500D11A66 /* WXHPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = E84987A71FDF752500D11A66 /* WXHPopoverView.m */; };
 		E85283841FD64C7A00F0160E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E85283831FD64C7A00F0160E /* AppDelegate.m */; };
 		E85283871FD64C7A00F0160E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E85283861FD64C7A00F0160E /* ViewController.m */; };
 		E852838A1FD64C7A00F0160E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E85283881FD64C7A00F0160E /* Main.storyboard */; };
@@ -16,10 +18,14 @@
 		E852839B1FD64CD900F0160E /* WXHAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = E852839A1FD64CD900F0160E /* WXHAlertController.m */; };
 		E852839E1FD64E1D00F0160E /* WXHAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = E852839D1FD64E1D00F0160E /* WXHAlertView.m */; };
 		E8591C1D1FD7DA1B004548CF /* WXHAlertMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8591C1C1FD7DA1B004548CF /* WXHAlertMaskView.m */; };
-		E8CB59931FDA81C800354413 /* WXHAlertArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8CB59921FDA81C800354413 /* WXHAlertArrowView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E849879F1FDF6EDA00D11A66 /* WXHAlertContainerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXHAlertContainerDelegate.h; sourceTree = "<group>"; };
+		E84987A31FDF751400D11A66 /* WXHActionSheetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXHActionSheetView.h; sourceTree = "<group>"; };
+		E84987A41FDF751400D11A66 /* WXHActionSheetView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXHActionSheetView.m; sourceTree = "<group>"; };
+		E84987A61FDF752500D11A66 /* WXHPopoverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXHPopoverView.h; sourceTree = "<group>"; };
+		E84987A71FDF752500D11A66 /* WXHPopoverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXHPopoverView.m; sourceTree = "<group>"; };
 		E852837F1FD64C7A00F0160E /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85283821FD64C7A00F0160E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E85283831FD64C7A00F0160E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -36,8 +42,6 @@
 		E852839D1FD64E1D00F0160E /* WXHAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXHAlertView.m; sourceTree = "<group>"; };
 		E8591C1B1FD7DA1B004548CF /* WXHAlertMaskView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXHAlertMaskView.h; sourceTree = "<group>"; };
 		E8591C1C1FD7DA1B004548CF /* WXHAlertMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXHAlertMaskView.m; sourceTree = "<group>"; };
-		E8CB59911FDA81C800354413 /* WXHAlertArrowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXHAlertArrowView.h; sourceTree = "<group>"; };
-		E8CB59921FDA81C800354413 /* WXHAlertArrowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXHAlertArrowView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,12 +93,15 @@
 			children = (
 				E85283991FD64CD900F0160E /* WXHAlertController.h */,
 				E852839A1FD64CD900F0160E /* WXHAlertController.m */,
-				E852839C1FD64E1D00F0160E /* WXHAlertView.h */,
-				E852839D1FD64E1D00F0160E /* WXHAlertView.m */,
-				E8CB59911FDA81C800354413 /* WXHAlertArrowView.h */,
-				E8CB59921FDA81C800354413 /* WXHAlertArrowView.m */,
 				E8591C1B1FD7DA1B004548CF /* WXHAlertMaskView.h */,
 				E8591C1C1FD7DA1B004548CF /* WXHAlertMaskView.m */,
+				E852839C1FD64E1D00F0160E /* WXHAlertView.h */,
+				E852839D1FD64E1D00F0160E /* WXHAlertView.m */,
+				E84987A31FDF751400D11A66 /* WXHActionSheetView.h */,
+				E84987A41FDF751400D11A66 /* WXHActionSheetView.m */,
+				E84987A61FDF752500D11A66 /* WXHPopoverView.h */,
+				E84987A71FDF752500D11A66 /* WXHPopoverView.m */,
+				E849879F1FDF6EDA00D11A66 /* WXHAlertContainerDelegate.h */,
 			);
 			path = WXHAlertController;
 			sourceTree = "<group>";
@@ -172,11 +179,12 @@
 			files = (
 				E852839E1FD64E1D00F0160E /* WXHAlertView.m in Sources */,
 				E85283871FD64C7A00F0160E /* ViewController.m in Sources */,
-				E8CB59931FDA81C800354413 /* WXHAlertArrowView.m in Sources */,
 				E85283921FD64C7A00F0160E /* main.m in Sources */,
 				E852839B1FD64CD900F0160E /* WXHAlertController.m in Sources */,
 				E8591C1D1FD7DA1B004548CF /* WXHAlertMaskView.m in Sources */,
+				E84987A81FDF752500D11A66 /* WXHPopoverView.m in Sources */,
 				E85283841FD64C7A00F0160E /* AppDelegate.m in Sources */,
+				E84987A51FDF751400D11A66 /* WXHActionSheetView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

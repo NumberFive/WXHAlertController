@@ -7,43 +7,34 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WXHAlertView.h"
 #import "WXHAlertMaskView.h"
-
-typedef NS_ENUM(NSInteger, WXHAlertControllerStyle) {
-    WXHAlertControllerStyleAlert = 0,
-    WXHAlertControllerStyleActionSheet,
-    WXHAlertControllerStylePopover,
-};
-
+#import "WXHAlertContainerDelegate.h"
 
 typedef void (^WXHAlertBlock)(void);
 
 @interface WXHAlertController : NSObject
-@property (nonatomic, assign) WXHAlertControllerStyle style;
-
-@property (nonatomic, strong) WXHAlertMaskView *maskView;
-@property (nonatomic, assign) WXHAlertMaskViewType maskViewType;
-@property (nonatomic, strong) UIColor *maskViewColor;
-@property (nonatomic, copy) WXHAlertBlock maskViewDidTapBlock;
-
-@property (nonatomic, strong) WXHAlertView *alertView;
-@property (nonatomic, strong) UIColor *arrowColor;
-
-@property (nonatomic, assign) CGSize contentSize;
-@property (nonatomic, assign) CGFloat alertOffset;
-
-@property (nonatomic, strong) CAAnimation *appearAnimation;
-@property (nonatomic, strong) CAAnimation *disappearAnimation;
-
-@property (nonatomic, weak) UIView *popverSourceView;
-@property (nonatomic, assign) CGRect popoverSourceFrame;
 @property (nonatomic, assign, readonly) BOOL isShow;
-@property (nonatomic, assign) CGSize arrowSize;
+@property (nonatomic, assign, readonly) BOOL isAppearAnimationing;
+@property (nonatomic, assign, readonly) BOOL isDisappearAnimationing;
+@property (nonatomic, assign) BOOL dismisWhenMaskViewDidTap;
 
+- (instancetype)initWithContainer:(UIView<WXHAlertContainerDelegate> *)container;
 - (void)setContentView:(UIView *)contentView;
+- (void)setContentSize:(CGSize)contentSize;
+
+- (void)setMaskViewColor:(UIColor *)maskViewColor;
+- (void)setMaskViewType:(WXHAlertMaskViewType)maskViewType;
+- (void)setMaskViewDidTapBlock:(WXHAlertBlock)block;
 
 - (void)show:(WXHAlertBlock)finished;
-- (void)showOnView:(UIView *)view complete:(WXHAlertBlock)finished;
+- (void)showOnView:(UIView *)view
+          complete:(WXHAlertBlock)finished;
+- (void)showOnView:(UIView *)view
+      aboveSubview:(UIView *)subview
+          complete:(WXHAlertBlock)finished;
+- (void)showOnView:(UIView *)view
+      belowSubview:(UIView *)subview
+          complete:(WXHAlertBlock)finished;
+
 - (void)dismiss:(WXHAlertBlock)finished;
 @end

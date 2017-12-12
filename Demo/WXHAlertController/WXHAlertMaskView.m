@@ -27,7 +27,19 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    _visualEffectView.frame = self.bounds;
+
+    if (self.type == WXHAlertMaskViewTypeBlur) {
+        self.backgroundColor = [UIColor clearColor];
+        self.visualEffectView.frame = self.bounds;
+    } else {
+        [_visualEffectView removeFromSuperview];
+        _visualEffectView = nil;
+        if (self.type == WXHAlertMaskViewTypeNone) {
+            self.backgroundColor = [UIColor clearColor];
+        } else {
+            self.backgroundColor = self.color;
+        }
+    }
 }
 - (void)tapDidAction
 {
@@ -51,18 +63,6 @@
 #pragma mark - Setter / Getter
 - (void)setType:(WXHAlertMaskViewType)type
 {
-    if (type == WXHAlertMaskViewTypeBlur) {
-        self.backgroundColor = [UIColor clearColor];
-        self.visualEffectView.frame = self.bounds;
-    } else {
-        [_visualEffectView removeFromSuperview];
-        _visualEffectView = nil;
-        if (type == WXHAlertMaskViewTypeNone) {
-            self.backgroundColor = [UIColor clearColor];
-        } else {
-            self.backgroundColor = self.color;
-        }
-    }
     _type = type;
 }
 - (UIVisualEffectView *)visualEffectView
@@ -74,5 +74,33 @@
         [self addSubview:self.visualEffectView];
     }
     return _visualEffectView;
+}
+- (CAAnimation *)appearAnimation
+{
+    if (!_appearAnimation) {
+        CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        animatOpacity.fromValue = @(0.0);
+        animatOpacity.toValue = @(1.0);
+        animatOpacity.duration = 0.15;
+        animatOpacity.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        animatOpacity.fillMode = kCAFillModeForwards;
+        animatOpacity.removedOnCompletion = NO;
+        _appearAnimation = animatOpacity;
+    }
+    return _appearAnimation;
+}
+- (CAAnimation *)disappearAnimation
+{
+    if (!_disappearAnimation) {
+        CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        animatOpacity.toValue = @(0);
+        animatOpacity.duration = 0.15;
+        animatOpacity.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        animatOpacity.fillMode = kCAFillModeForwards;
+        animatOpacity.removedOnCompletion = NO;
+        
+        _disappearAnimation = animatOpacity;
+    }
+    return _disappearAnimation;
 }
 @end

@@ -1,17 +1,18 @@
 //
-//  WXHAlertView.m
+//  WXHActionSheetView.m
 //  Demo
 //
-//  Created by 伍小华 on 2017/12/5.
+//  Created by 伍小华 on 2017/12/12.
 //  Copyright © 2017年 wxh. All rights reserved.
 //
 
-#import "WXHAlertView.h"
-@interface WXHAlertView ()
+#import "WXHActionSheetView.h"
+
+@interface WXHActionSheetView()
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, assign) CGSize contentSize;
 @end
-@implementation WXHAlertView
+@implementation WXHActionSheetView
 - (instancetype)init
 {
     self = [super init];
@@ -25,13 +26,12 @@
     [super layoutSubviews];
     self.contentView.frame = self.bounds;
 }
-
 #pragma mark - WXHAlertContainerDelegate
 - (void)updateLayout
 {
-    self.frame = CGRectMake((self.superview.frame.size.width-self.contentSize.width)/2.0,
-                            (self.superview.frame.size.height-self.contentSize.height)/2.0,
-                            self.contentSize.width, self.contentSize.height);
+    self.frame = CGRectMake(0,
+                            self.superview.frame.size.height-self.contentSize.height,
+                            self.superview.frame.size.width, self.contentSize.height);
 }
 - (void)setContentSize:(CGSize)size
 {
@@ -51,16 +51,21 @@
 }
 - (CAAnimation *)appearAnimation
 {
+    CGPoint fromCenter = self.center;
+    CGPoint toCenter = self.center;
+    fromCenter.y = self.superview.frame.size.height + self.frame.size.height/2.0;
+    toCenter.y = self.superview.frame.size.height - self.frame.size.height/2.0;
+    
     CAAnimationGroup *animatGroup = [CAAnimationGroup animation];
-    
-    CAKeyframeAnimation *animatScale = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-    animatScale.values = @[@(0.0),@(0.5),@(1.0),@(1.2),@(1.1),@(1.0)];
-    
     CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
     animatOpacity.fromValue = @(0.0);
     animatOpacity.toValue = @(1.0);
     
-    animatGroup.animations = @[animatScale,animatOpacity];
+    CABasicAnimation *animatPosition = [CABasicAnimation animationWithKeyPath:@"position"];
+    animatPosition.fromValue = [NSValue valueWithCGPoint:fromCenter];
+    animatPosition.toValue = [NSValue valueWithCGPoint:toCenter];
+    
+    animatGroup.animations = @[animatOpacity,animatPosition];
     animatGroup.duration = 0.15;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
@@ -69,18 +74,22 @@
 }
 - (CAAnimation *)disappearAnimation
 {
+    CGPoint center = self.center;
+    center.y = self.superview.frame.size.height+self.frame.size.height/2.0;
+    
     CAAnimationGroup *animatGroup = [CAAnimationGroup animation];
-    CABasicAnimation *animatScale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    animatScale.toValue = @(0.1);
-    animatScale.autoreverses = YES;
     CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
     animatOpacity.toValue = @(0);
     
-    animatGroup.animations = @[animatScale,animatOpacity];
+    CABasicAnimation *animatPosition = [CABasicAnimation animationWithKeyPath:@"position"];
+    animatPosition.toValue = [NSValue valueWithCGPoint:center];
+    
+    animatGroup.animations = @[animatOpacity,animatPosition];
     animatGroup.duration = 0.15;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
     animatGroup.removedOnCompletion = NO;
     return animatGroup;
 }
+
 @end
