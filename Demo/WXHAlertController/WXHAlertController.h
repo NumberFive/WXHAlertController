@@ -16,7 +16,7 @@ typedef void (^WXHAlertBlock)(void);
 @property (nonatomic, assign, readonly) BOOL isShow;
 @property (nonatomic, assign, readonly) BOOL isAppearAnimationing;
 @property (nonatomic, assign, readonly) BOOL isDisappearAnimationing;
-@property (nonatomic, assign) BOOL dismisWhenMaskViewDidTap;
+@property (nonatomic, assign) BOOL dismissWhenMaskViewDidTap;
 
 - (instancetype)initWithContainer:(UIView<WXHAlertContainerDelegate> *)container;
 - (void)setContentView:(UIView *)contentView;

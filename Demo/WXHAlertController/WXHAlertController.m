@@ -37,7 +37,7 @@
         self.contentSize = CGSizeMake(100, 100);
         self.appearAnimationTimeInterval = 0.15;
         self.disappearAnimationTimeInterval = 0.15;
-        self.dismisWhenMaskViewDidTap = YES;
+        self.dismissWhenMaskViewDidTap = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateLayout)
@@ -179,7 +179,7 @@
     if (self.maskViewDidTapBlock) {
         self.maskViewDidTapBlock();
     }
-    if (self.dismisWhenMaskViewDidTap) {
+    if (self.dismissWhenMaskViewDidTap) {
         [self dismiss:nil];
     }
 }

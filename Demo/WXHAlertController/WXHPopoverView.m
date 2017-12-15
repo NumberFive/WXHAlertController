@@ -190,7 +190,6 @@ typedef NS_ENUM(NSInteger, WXHAlertViewArrowDirection) {
 {
     if (!_arrowView) {
         _arrowView = [[WXHAlertArrowView alloc] init];
-        _arrowView.alpha = 0.8;
         _arrowView.backgroundColor = [UIColor clearColor];
     }
     return _arrowView;
