@@ -37,10 +37,9 @@
         containerView = [[WXHAlertView alloc] init];
     } else if (button.tag == 2) {
         WXHPopoverView *popoverView = [[WXHPopoverView alloc] init];
-        popoverView.arrowSize = CGSizeMake(30, 15);
-        popoverView.arrowColor = [UIColor brownColor];
-        popoverView.popverSourceView = button;
+        popoverView.popoverSourceView = button;
         popoverView.popoverSourceFrame = button.frame;
+        popoverView.backColor = [UIColor brownColor];
         containerView = popoverView;
     }
     [self showView:self.contentView
@@ -62,10 +61,9 @@
     UIButton *button = sender;
     UIView<WXHAlertContainerDelegate> *containerView;
     WXHPopoverView *popoverView = [[WXHPopoverView alloc] init];
-    popoverView.arrowSize = CGSizeMake(30, 15);
-    popoverView.arrowColor = self.contentView.backgroundColor;
-    popoverView.popverSourceView = button;
+    popoverView.popoverSourceView = button;
     popoverView.popoverSourceFrame = button.frame;
+    popoverView.backColor = [UIColor brownColor];
     containerView = popoverView;
     
     [self showView:self.contentView
@@ -88,8 +86,8 @@
     if (!_contentView) {
         _contentView = [[UIView alloc] init];
         _contentView.backgroundColor = [UIColor brownColor];
-        _contentView.layer.cornerRadius = 10.0f;
-        _contentView.clipsToBounds = YES;
+//        _contentView.layer.cornerRadius = 10.0f;
+//        _contentView.clipsToBounds = YES;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
         label.textColor = [UIColor blackColor];
         label.font = [UIFont systemFontOfSize:35.0f];

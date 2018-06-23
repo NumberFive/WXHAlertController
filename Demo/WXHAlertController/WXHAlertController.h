@@ -10,6 +10,10 @@
 #import "WXHAlertMaskView.h"
 #import "WXHAlertContainerDelegate.h"
 
+#import "WXHAlertView.h"
+#import "WXHActionSheetView.h"
+#import "WXHPopoverView.h"
+
 typedef void (^WXHAlertBlock)(void);
 
 @interface WXHAlertController : NSObject
@@ -17,6 +21,7 @@ typedef void (^WXHAlertBlock)(void);
 @property (nonatomic, assign, readonly) BOOL isAppearAnimationing;
 @property (nonatomic, assign, readonly) BOOL isDisappearAnimationing;
 @property (nonatomic, assign) BOOL dismissWhenMaskViewDidTap;
+@property (nonatomic, strong, readonly) WXHAlertMaskView *maskView;
 
 - (instancetype)initWithContainer:(UIView<WXHAlertContainerDelegate> *)container;
 - (void)setContentView:(UIView *)contentView;

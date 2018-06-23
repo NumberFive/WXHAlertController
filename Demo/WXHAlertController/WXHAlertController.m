@@ -9,6 +9,9 @@
 #import "WXHAlertController.h"
 
 @interface WXHAlertController ()<WXHAlertMaskViewDelegate,CAAnimationDelegate>
+{
+    WXHAlertMaskView *_maskView;
+}
 @property (nonatomic, strong) UIWindow *frontWindow;
 
 @property (nonatomic, copy) WXHAlertBlock didAppearBlock;
@@ -21,12 +24,13 @@
 @property (nonatomic, strong) CAAnimation *disappearAnimation;
 
 @property (nonatomic, strong) UIView<WXHAlertContainerDelegate> *containerView;
-@property (nonatomic, strong) WXHAlertMaskView *maskView;
+
 
 @property (nonatomic, weak) id<WXHAlertContainerDelegate> delegate;
 @property (nonatomic, copy) WXHAlertBlock maskViewDidTapBlock;
 @end
 @implementation WXHAlertController
+@synthesize maskView = _maskView;
 
 - (instancetype)initWithContainer:(UIView<WXHAlertContainerDelegate> *)container
 {
