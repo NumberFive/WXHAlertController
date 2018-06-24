@@ -48,7 +48,7 @@
 - (void)updateLayout
 {
     self.frame = CGRectMake(0,
-                            self.superview.frame.size.height - self.contentSize.height,
+                            self.superview.frame.size.height - self.contentSize.height - self.bottomOffset,
                             self.superview.frame.size.width,
                             self.contentSize.height);
 }
@@ -73,7 +73,7 @@
     CGPoint fromCenter = self.center;
     CGPoint toCenter = self.center;
     fromCenter.y = self.superview.frame.size.height + self.frame.size.height/2.0;
-    toCenter.y = self.superview.frame.size.height - self.frame.size.height/2.0;
+    toCenter.y = self.superview.frame.size.height - self.frame.size.height/2.0 - self.bottomOffset;
     
     CAAnimationGroup *animatGroup = [CAAnimationGroup animation];
     CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
