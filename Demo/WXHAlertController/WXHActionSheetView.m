@@ -26,11 +26,29 @@
     [super layoutSubviews];
     self.contentView.frame = self.bounds;
 }
+//使事件透过自己
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (self.userInteractionEnabled == NO || self.hidden == YES || self.alpha <= 0.01) return nil;
+    
+    if (![self pointInside:point withEvent:event]) return nil;
+    
+    NSInteger count = self.subviews.count;
+    for (NSInteger i = count - 1; i >= 0; i--) {
+        UIView *childView = self.subviews[i];
+        CGPoint childPoint = [self convertPoint:point toView:childView];
+        UIView *fitView = [childView hitTest:childPoint withEvent:event];
+        if (fitView) {
+            return fitView;
+        }
+    }
+    return nil;
+}
 #pragma mark - WXHAlertContainerDelegate
 - (void)updateLayout
 {
     self.frame = CGRectMake(0,
-                            self.superview.frame.size.height - self.contentSize.height - self.bottomOffset,
+                            self.superview.frame.size.height - self.contentSize.height,
                             self.superview.frame.size.width,
                             self.contentSize.height);
 }
@@ -55,7 +73,7 @@
     CGPoint fromCenter = self.center;
     CGPoint toCenter = self.center;
     fromCenter.y = self.superview.frame.size.height + self.frame.size.height/2.0;
-    toCenter.y = self.superview.frame.size.height - self.frame.size.height/2.0 - self.bottomOffset;
+    toCenter.y = self.superview.frame.size.height - self.frame.size.height/2.0;
     
     CAAnimationGroup *animatGroup = [CAAnimationGroup animation];
     CABasicAnimation *animatOpacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
@@ -67,7 +85,7 @@
     animatPosition.toValue = [NSValue valueWithCGPoint:toCenter];
     
     animatGroup.animations = @[animatOpacity,animatPosition];
-    animatGroup.duration = 0.15;
+    animatGroup.duration = 0.1;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
     animatGroup.removedOnCompletion = NO;
@@ -86,7 +104,7 @@
     animatPosition.toValue = [NSValue valueWithCGPoint:center];
     
     animatGroup.animations = @[animatOpacity,animatPosition];
-    animatGroup.duration = 0.15;
+    animatGroup.duration = 0.1;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
     animatGroup.removedOnCompletion = NO;

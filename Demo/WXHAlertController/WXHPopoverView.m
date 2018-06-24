@@ -35,6 +35,31 @@
     }
     return self;
 }
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.maskView.frame = self.bounds;
+}
+//使事件透过自己
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (self.userInteractionEnabled == NO || self.hidden == YES || self.alpha <= 0.01) return nil;
+
+    if (![self pointInside:point withEvent:event]) return nil;
+
+    NSInteger count = self.subviews.count;
+    for (NSInteger i = count - 1; i >= 0; i--) {
+        UIView *childView = self.subviews[i];
+        CGPoint childPoint = [self convertPoint:point toView:childView];
+        UIView *fitView = [childView hitTest:childPoint withEvent:event];
+        if (fitView) {
+            return fitView;
+        }
+    }
+    return nil;
+}
+
+
 - (UIBezierPath *)bezierPathWithRect:(CGRect)rect
                           rectCorner:(UIRectCorner)rectCorner
                         cornerRadius:(CGFloat)cornerRadius
@@ -191,69 +216,76 @@
     CGFloat offset_x = 0;
     CGFloat offset_y = 0;
     
-    if (self.arrowDirection == WXHAlertViewArrowDirectionAuto) {
+    WXHAlertViewArrowDirection arrowDirection = self.arrowDirection;
+    
+    if (arrowDirection == WXHAlertViewArrowDirectionAuto) {
         //先判断上下的时候，箭头能不能放
         if (sourceFrame.origin.y + sourceFrame.size.height + self.contentSize.height + self.borderWidth * 2 + self.minMargin + self.arrowSize.height < superViewFrame.size.height) {
-            self.arrowDirection = WXHAlertViewArrowDirectionUp;
+            arrowDirection = WXHAlertViewArrowDirectionUp;
         } else if (sourceFrame.origin.y - (self.contentSize.height + self.borderWidth * 2 + self.minMargin + self.arrowSize.height) - 100 > 0) {
-            self.arrowDirection = WXHAlertViewArrowDirectionDown;
+            arrowDirection = WXHAlertViewArrowDirectionDown;
         } else if (sourceFrame.origin.x + sourceFrame.size.width + self.contentSize.width + self.borderWidth * 2 + self.minMargin + self.arrowSize.width < superViewFrame.size.width) {
-            self.arrowDirection = WXHAlertViewArrowDirectionLeft;
+            arrowDirection = WXHAlertViewArrowDirectionLeft;
         } else {
-            self.arrowDirection = WXHAlertViewArrowDirectionRight;
+            arrowDirection = WXHAlertViewArrowDirectionRight;
+        }        
+    }
+    
+    
+    CGFloat arrowMinMargin = self.cornerRadius > self.arrowMinMargin ? self.cornerRadius : self.arrowMinMargin;
+    
+    if (arrowDirection == WXHAlertViewArrowDirectionUp || arrowDirection == WXHAlertViewArrowDirectionDown) {
+        arrow_x = sourceFrame.origin.x + sourceFrame.size.width/2;
+        offset_x = arrow_x - self.contentSize.width/2 - self.borderWidth;
+        
+        if (offset_x < self.minMargin) {
+            offset_x = self.minMargin;
+        } else if (offset_x > superViewFrame.size.width - self.contentSize.width - self.minMargin - self.borderWidth) {
+            offset_x = superViewFrame.size.width - self.contentSize.width - self.minMargin - self.borderWidth;
         }
         
-        CGFloat arrowMinMargin = self.cornerRadius > self.arrowMinMargin ? self.cornerRadius : self.arrowMinMargin;
-        
-        if (self.arrowDirection == WXHAlertViewArrowDirectionUp || self.arrowDirection == WXHAlertViewArrowDirectionDown) {
-            arrow_x = sourceFrame.origin.x + sourceFrame.size.width/2;
-            offset_x = arrow_x - self.contentSize.width/2 - self.borderWidth;
+        arrow_x = arrow_x - offset_x;
+        //当箭头离左边距离不在中心点，就往左边移一点
+        if (arrow_x < arrowMinMargin + self.arrowSize.width/2) {
+            arrow_x = arrowMinMargin + self.arrowSize.width/2;
             
-            if (offset_x < self.minMargin) {
-                offset_x = self.minMargin;
-            } else if (offset_x > superViewFrame.size.width - self.contentSize.width - self.minMargin - self.borderWidth) {
-                offset_x = superViewFrame.size.width - self.contentSize.width - self.minMargin - self.borderWidth;
-            }
-            
-            arrow_x = arrow_x - offset_x;
-            //当箭头离左边距离不在中心点，就往左边移一点
-            if (arrow_x < arrowMinMargin + self.arrowSize.width/2) {
-                arrow_x = arrowMinMargin + self.arrowSize.width/2;
-                
+            if (self.arrowDirection == WXHAlertViewArrowDirectionAuto) {
                 //左移之后已经超出了按钮的大小，就只能把箭头指向左边
                 if (arrow_x + offset_x < sourceFrame.origin.x || arrow_x + offset_x > sourceFrame.origin.x + sourceFrame.size.width) {
-                    self.arrowDirection = WXHAlertViewArrowDirectionLeft;
+                    arrowDirection = WXHAlertViewArrowDirectionLeft;
                 }
-            } else if (arrow_x > self.contentSize.width + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2) {
-                
-                arrow_x = self.contentSize.width + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2;
-                
+            }
+        } else if (arrow_x > self.contentSize.width + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2) {
+            
+            arrow_x = self.contentSize.width + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2;
+            
+            if (self.arrowDirection == WXHAlertViewArrowDirectionAuto) {
                 //右移之后已经超出了按钮的大小，就这孩子能把箭头指向右边
                 if (arrow_x + offset_x < sourceFrame.origin.x || arrow_x + offset_x > sourceFrame.origin.x + sourceFrame.size.width) {
-                    self.arrowDirection = WXHAlertViewArrowDirectionRight;
+                    arrowDirection = WXHAlertViewArrowDirectionRight;
                 }
-            }
-        }
-        if (self.arrowDirection == WXHAlertViewArrowDirectionLeft || self.arrowDirection == WXHAlertViewArrowDirectionRight){
-            arrow_y = sourceFrame.origin.y + sourceFrame.size.height / 2;
-            offset_y = arrow_y - self.contentSize.height / 2 - self.borderWidth;
-            
-            if (offset_y < self.minMargin) {
-                offset_y = self.minMargin;
-            } else if (offset_y > superViewFrame.size.height - self.contentSize.height - self.minMargin - self.borderWidth) {
-                offset_y = superViewFrame.size.height - self.contentSize.height - self.minMargin - self.borderWidth;
-            }
-            
-            arrow_y = arrow_y - offset_y;
-            if (arrow_y < arrowMinMargin + self.arrowSize.width/2) {
-                arrow_y = arrowMinMargin + self.arrowSize.width/2;
-            } else if (arrow_y > self.contentSize.height + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2) {
-                arrow_y = self.contentSize.height + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2;
             }
         }
     }
+    if (arrowDirection == WXHAlertViewArrowDirectionLeft || arrowDirection == WXHAlertViewArrowDirectionRight){
+        arrow_y = sourceFrame.origin.y + sourceFrame.size.height / 2;
+        offset_y = arrow_y - self.contentSize.height / 2 - self.borderWidth;
+        
+        if (offset_y < self.minMargin) {
+            offset_y = self.minMargin;
+        } else if (offset_y > superViewFrame.size.height - self.contentSize.height - self.minMargin - self.borderWidth) {
+            offset_y = superViewFrame.size.height - self.contentSize.height - self.minMargin - self.borderWidth;
+        }
+        
+        arrow_y = arrow_y - offset_y;
+        if (arrow_y < arrowMinMargin + self.arrowSize.width/2) {
+            arrow_y = arrowMinMargin + self.arrowSize.width/2;
+        } else if (arrow_y > self.contentSize.height + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2) {
+            arrow_y = self.contentSize.height + self.borderWidth * 2 - arrowMinMargin -  self.arrowSize.width/2;
+        }
+    }
     
-    if (self.arrowDirection == WXHAlertViewArrowDirectionUp) {
+    if (arrowDirection == WXHAlertViewArrowDirectionUp) {
         offset_y = sourceFrame.origin.y + sourceFrame.size.height + self.offset;
         arrow_y = 0;
         
@@ -267,7 +299,7 @@
                                             self.contentSize.width,
                                             self.contentSize.height);
         
-    } else if (self.arrowDirection == WXHAlertViewArrowDirectionDown) {
+    } else if (arrowDirection == WXHAlertViewArrowDirectionDown) {
         offset_y = sourceFrame.origin.y - self.offset - self.contentSize.height - self.borderWidth * 2 - self.arrowSize.height;
         arrow_y = self.contentSize.height + self.arrowSize.height + self.borderWidth * 2;
         
@@ -281,7 +313,7 @@
                                             self.contentSize.width,
                                             self.contentSize.height);
         
-    } else if (self.arrowDirection == WXHAlertViewArrowDirectionLeft) {
+    } else if (arrowDirection == WXHAlertViewArrowDirectionLeft) {
         offset_x = sourceFrame.origin.x + sourceFrame.size.width + self.offset;
         arrow_x = 0;
         
@@ -295,7 +327,7 @@
                                             self.contentSize.width,
                                             self.contentSize.height);
         
-    } else if (self.arrowDirection == WXHAlertViewArrowDirectionRight) {
+    } else if (arrowDirection == WXHAlertViewArrowDirectionRight) {
         offset_x = sourceFrame.origin.x - self.offset - self.contentSize.width - self.borderWidth * 2 - self.arrowSize.height;
         arrow_x = self.contentSize.width + self.arrowSize.height + self.borderWidth * 2;
         
@@ -315,7 +347,7 @@
                                   cornerRadius:self.cornerRadius
                                      arrowSize:self.arrowSize
                                  arrowPosition:self.arrowPosition
-                                arrowDirection:self.arrowDirection];
+                                arrowDirection:arrowDirection];
     
     self.maskShapeLayer.path = self.bezierPath.CGPath;
 }

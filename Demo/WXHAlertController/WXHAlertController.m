@@ -251,6 +251,8 @@
         animatOpacity.removedOnCompletion = NO;
         animation = animatOpacity;
     }
+    animation.delegate = self;
+    [animation setValue:@"appearAnimation" forKey:@"AnimationKey"];
     return animation;
 }
 - (CAAnimation *)disappearAnimation

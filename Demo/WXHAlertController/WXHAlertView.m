@@ -25,7 +25,24 @@
     [super layoutSubviews];
     self.contentView.frame = self.bounds;
 }
-
+//使事件透过自己
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (self.userInteractionEnabled == NO || self.hidden == YES || self.alpha <= 0.01) return nil;
+    
+    if (![self pointInside:point withEvent:event]) return nil;
+    
+    NSInteger count = self.subviews.count;
+    for (NSInteger i = count - 1; i >= 0; i--) {
+        UIView *childView = self.subviews[i];
+        CGPoint childPoint = [self convertPoint:point toView:childView];
+        UIView *fitView = [childView hitTest:childPoint withEvent:event];
+        if (fitView) {
+            return fitView;
+        }
+    }
+    return nil;
+}
 #pragma mark - WXHAlertContainerDelegate
 - (void)updateLayout
 {
@@ -61,7 +78,7 @@
     animatOpacity.toValue = @(1.0);
     
     animatGroup.animations = @[animatScale,animatOpacity];
-    animatGroup.duration = 0.15;
+    animatGroup.duration = 0.1;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
     animatGroup.removedOnCompletion = NO;
@@ -77,7 +94,7 @@
     animatOpacity.toValue = @(0);
     
     animatGroup.animations = @[animatScale,animatOpacity];
-    animatGroup.duration = 0.15;
+    animatGroup.duration = 0.1;
     animatGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animatGroup.fillMode = kCAFillModeForwards;
     animatGroup.removedOnCompletion = NO;

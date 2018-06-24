@@ -15,6 +15,7 @@
 @interface ViewController ()
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UINavigationController *nav;
+@property (nonatomic, strong) WXHAlertController *alertController;
 @end
 
 @implementation ViewController
@@ -74,11 +75,11 @@
        container:(UIView<WXHAlertContainerDelegate> *)containerView
         maskType:(WXHAlertMaskViewType)type
 {
-    WXHAlertController *alertController = [[WXHAlertController alloc] initWithContainer:containerView];
-    alertController.contentSize = CGSizeMake(200, 200);
-    alertController.contentView = view;
-    alertController.maskViewType = type;
-    [alertController show:nil];
+    self.alertController = [[WXHAlertController alloc] initWithContainer:containerView];
+    self.alertController.contentSize = CGSizeMake(200, 200);
+    self.alertController.contentView = view;
+    self.alertController.maskViewType = type;
+    [self.alertController show:nil];
 }
 
 - (UIView *)contentView

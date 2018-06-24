@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 #import "WXHAlertContainerDelegate.h"
 @interface WXHActionSheetView : UIView<WXHAlertContainerDelegate>
-@property (nonatomic, assign) CGFloat bottomOffset;
 @end
